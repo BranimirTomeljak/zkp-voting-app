@@ -880,10 +880,6 @@ function App() {
         {currentAccount && isOwner && (
           <section className="admin-panel">
             <h2>Admin Panel</h2>
-            <p className="success-message">
-              You are the contract owner and have administrative privileges
-            </p>
-
             {/* Admin Verification Controls */}
             <div className="admin-section">
               <h3>Admin Voter Verification</h3>
