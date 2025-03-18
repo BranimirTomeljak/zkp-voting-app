@@ -70,19 +70,6 @@
         "stateMutability": "nonpayable"
     },
     {
-        "type": "function",
-        "name": "verifyUsersBatch",
-        "inputs": [
-            {
-                "name": "_users",
-                "type": "address[]",
-                "internalType": "address[]"
-            }
-        ],
-        "outputs": [],
-        "stateMutability": "nonpayable"
-    },
-    {
         "type": "event",
         "name": "SelfVerified",
         "inputs": [

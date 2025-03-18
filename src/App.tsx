@@ -168,17 +168,18 @@ function App() {
     try {
       // Get contract owner - explicitly compare strings after converting to lowercase
       const owner = await electionInstance.methods.owner().call();
-      console.log("Contract owner:", owner);
-      console.log("Current account:", account);
       setIsOwner(account.toLowerCase() === owner.toLowerCase());
+      // alert("Contract owner: " + owner);
 
       // Get election state
       const state = await electionInstance.methods.electionState().call();
       setElectionState(parseInt(state));
+      // alert("Election state: " + state);
 
       // Get election count
       const count = await electionInstance.methods.electionCount().call();
       setElectionCount(parseInt(count));
+      // alert("Election count: " + count);
 
       // Get all candidates
       const candidatesList = await electionInstance.methods
@@ -197,6 +198,7 @@ function App() {
         .isUserVerified(account)
         .call();
       setIsVerified(verified);
+      // alert("User verified: " + verified);
 
       // Check if user has voted (if election is active)
       if (parseInt(state) === ElectionState.Active) {
@@ -206,8 +208,9 @@ function App() {
             .hasUserVoted(account)
             .call();
           setHasVoted(voted);
+          // alert("User has voted: " + voted);
         } catch (voteErr) {
-          console.error("Error checking if user has voted:", voteErr);
+          alert("Error checking if user has voted: " + voteErr);
           // Default to not voted if there's an error
           setHasVoted(false);
         }
@@ -217,13 +220,14 @@ function App() {
           const leader = await electionInstance.methods
             .getCurrentLeader()
             .call();
+          alert("Current leader: " + JSON.stringify(leader));
           setCurrentLeader({
             id: parseInt(leader.leaderId),
             name: leader.leaderName,
             votes: parseInt(leader.leaderVotes),
           });
         } catch (err) {
-          console.log("No leader data available yet");
+          alert("No leader data available yet");
           setCurrentLeader(null);
         }
       } else {
@@ -231,7 +235,7 @@ function App() {
         setCurrentLeader(null);
       }
     } catch (err) {
-      console.error("Error loading contract data:", err);
+      alert("Error loading contract data: " + err);
       setError("Failed to load contract data");
     }
   };
@@ -347,7 +351,7 @@ function App() {
   };
 
   // Add candidates in batch
-  const handleAddCandidatesBatch = async () => {
+  const handleAddCandidates = async () => {
     if (!electionContract || !web3 || !currentAccount || !isOwner) return;
     if (electionState !== ElectionState.Preparing) {
       setError("Cannot add candidates when election is not in preparing state");
@@ -383,9 +387,9 @@ function App() {
       // Get current gas price
       const gasPrice = await web3.eth.getGasPrice();
 
-      // Call the batch add function on the contract with gasPrice
+      // Call the add function on the contract with gasPrice
       await electionContract.methods
-        .addCandidatesBatch(candidateIds, candidateNames)
+        .addCandidates(candidateIds, candidateNames)
         .send({
           from: currentAccount,
           gasPrice: gasPrice, // Add this line to fix EIP-1559 error
@@ -588,7 +592,7 @@ function App() {
 
       setPastElections(formattedElections);
     } catch (err) {
-      console.error("Error fetching past elections:", err);
+      alert("Error fetching past elections: " + err);
       setError("Failed to fetch past elections");
     } finally {
       setLoading(false);
@@ -608,7 +612,7 @@ function App() {
         voteCount: parseInt(r.voteCount),
       }));
     } catch (err) {
-      console.error(`Error fetching election #${id}:`, err);
+      alert(`Error fetching election #${id}: ` + err);
       return [];
     }
   };
@@ -945,7 +949,7 @@ function App() {
 
                       <button
                         className="submit-batch"
-                        onClick={handleAddCandidatesBatch}
+                        onClick={handleAddCandidates}
                         disabled={
                           loading ||
                           !candidateBatch.some((c) => c.name.trim() !== "")
