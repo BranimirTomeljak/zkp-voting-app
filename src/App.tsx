@@ -227,7 +227,7 @@ function App() {
             votes: parseInt(leader.leaderVotes),
           });
         } catch (err) {
-          alert("No leader data available yet");
+          // alert("No leader data available yet");
           setCurrentLeader(null);
         }
       } else {
